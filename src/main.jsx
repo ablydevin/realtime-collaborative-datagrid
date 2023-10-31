@@ -5,7 +5,7 @@ import { Realtime } from "ably";
 
 import { AblyProvider } from "ably/react";
 import Spaces from '@ably/spaces';
-import { SpacesProvider, SpaceProvider } from "@ably/spaces/dist/mjs/react/index.js";
+import { SpacesProvider, SpaceProvider } from "@ably/spaces/react";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";

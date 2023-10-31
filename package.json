@@ -10,12 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ably/spaces":"file:../spaces",
+    "@ably/spaces": "^0.2.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
     "@mui/material": "^5.14.14",
-    "ably": "^1.2.45",
+    "ably": "^1.2.46",
     "ag-grid-community": "^30.2.0",
     "ag-grid-react": "^30.2.0",
     "express": "^4.18.2",
