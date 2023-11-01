@@ -28,7 +28,7 @@ function App() {
     space?.enter({ clientID: client.auth.clientId });
   }, [space]);
 
-  const [rowData] = useState([
+  const [rowData, updateRowData] = useState([
     { id: "a", make: "Toyota", model: "Celica", price: 35000, rowMembers: [] },
     { id: "b", make: "Ford", model: "Mondeo", price: 32000, rowMembers: [] },
     { id: "c", make: "Porsche", model: "Boxter", price: 72000, rowMembers: [] },
@@ -66,33 +66,100 @@ function App() {
     //if there is a previous location, remove the clientid from it
     const removeMemberFromLocation = (location, clientId) => {
       console.log(`Remove from prior location`)
-      const row = rowData.find((r) => r.id === location);
-      const idx = row.rowMembers.indexOf(clientId);
-      console.log(idx)
-      if (idx > -1) {
-        row.rowMembers.splice(idx, 1);
+
+      // Clone the row data
+      //const rowDataClone = [...rowData]      
+
+      // Find the row index we want to update
+      //const rowIdx = rowDataClone.findIndex((r) => r.id === location);
+      const rowIdx = rowData.findIndex((r) => r.id === location);
+
+      // Create a clone of the data row
+      //const rowClone = { ...rowDataClone[rowIdx] }
+      const row = rowData[rowIdx]
+
+      // clone the members of the row index
+      //const rowMembersClone = [... rowClone.rowMembers]
+      const rowMembersClone = [...row.rowMembers]
+
+      // find the index of the rowMember
+      const memberIdx = rowMembersClone.indexOf(clientId);
+
+      //If the index is >1 remove that member from the cloned array
+      if (memberIdx > -1) {
+        console.log(`Removing found member at row ${rowIdx} member ${memberIdx}`)
+        console.log(rowMembersClone)
+        rowMembersClone.splice(memberIdx, 1);
+        console.log(rowMembersClone)
+
+        // Assign the updated cloned member array
+        //rowClone.rowMembers = rowMembersClone
+
+        updateRowData(rowData => {
+          const copy = [...rowData]
+          copy[rowIdx].rowMembers = rowMembersClone
+          return copy
+        })
+        // Update the rowdata state
+        //rowDataClone[rowIdx] = rowClone;
+        //console.log(rowDataClone[rowIdx].rowMembers)
+        //updateRowData(rowDataClone)
       }
-      console.log(row.rowMembers)
+
     };
 
     const addMemberToLocation = (location, clientId) => {
       console.log(`Add to location`)
-      const row = rowData.find((r) => r.id === location);
-      if (!row.rowMembers.includes(clientId)) {
-        row.rowMembers.push(clientId);
-      }
-      console.log(row.rowMembers)
-    };
+      
+      // Clone the row data
+      const rowDataClone = [...rowData]      
 
+      // Find the row index we want to update
+      const rowIdx = rowDataClone.findIndex((r) => r.id === location);
+
+      // Create a clone of the data row
+      //const rowClone = { ...rowDataClone[rowIdx] }
+      const row = rowData[rowIdx]
+
+      // clone the members of the row index
+      const rowMembersClone = [...row.rowMembers]
+
+      if (!rowMembersClone.includes(clientId)) {
+        console.log(`Adding member to row index ${rowIdx}`)
+        console.log(rowMembersClone)
+        //rowMembersClone = [...rowMembersClone, clientId];
+        rowMembersClone.push(clientId);
+        console.log(rowMembersClone)
+
+        updateRowData(rowData => {
+          const copy = [...rowData]
+          copy[rowIdx].rowMembers = rowMembersClone
+          //console.log(copy[rowIdx].rowMembers)
+          return copy
+        })
+        // Assign the updated cloned member array
+        //rowClone.rowMembers = rowMembersClone
+  
+        // Update the rowdata state
+        //rowDataClone[rowIdx] = rowClone;
+        //updateRowData(rowDataClone)
+      }
+    };
+    
     if (prev) {
       removeMemberFromLocation(prev, id);
     }
     addMemberToLocation(next, id);
 
-    console.log(JSON.stringify(rowData))
-    console.log(api)
+    //console.log(JSON.stringify(rowData))
+    //console.log(api)
 
   };
+
+  const changeValue = (e) => {
+
+
+  }
 
   const onGridReady = (e) => {
     api = e.api;
@@ -147,6 +214,7 @@ function App() {
             others.map((m) => <li key={m.clientId}>{m.clientId}</li>)}
         </ul>
       </div>
+      <button onClick={changeValue}>Change</button>
     </>
   );
 }
