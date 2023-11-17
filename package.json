@@ -13,26 +13,31 @@
     "@ably/spaces": "^0.2.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@fontsource/roboto": "^5.0.8",
-    "@mui/material": "^5.14.14",
     "ably": "^1.2.46",
     "ag-grid-community": "^30.2.0",
     "ag-grid-react": "^30.2.0",
     "express": "^4.18.2",
+    "flowbite": "^2.1.1",
+    "flowbite-react": "^0.6.4",
+    "immer": "^10.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-use": "^17.4.0",
     "unique-names-generator": "^4.7.1",
+    "use-immer": "^0.9.0",
     "vite-plugin-api": "^1.0.4"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.0.3",
+    "autoprefixer": "^10.4.16",
     "eslint": "^8.45.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.5",
     "vite": "^4.4.5"
   }
 }
