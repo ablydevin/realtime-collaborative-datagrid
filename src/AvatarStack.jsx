@@ -9,7 +9,6 @@ function AvatarStack({ members }) {
       key={m}
       rounded
       stacked
-      color="purple"
       placeholderInitials={m.toUpperCase().substring(0, 1)}
     />
   ));

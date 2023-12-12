@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { useSpace, useMembers, useLocations } from "@ably/spaces/react";
 import { useImmer } from "use-immer";
@@ -11,7 +11,6 @@ import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional theme CSS
 import AvatarStack from "./AvatarStack";
 
 function App() {
-  let api = null;
 
   const [rowData, updateRowData] = useImmer([
     {
@@ -39,7 +38,7 @@ function App() {
 
   const client = useAbly();
   const { space } = useSpace();
-  const { self, others } = useMembers();
+  const { others } = useMembers();
 
   useEffect(() => {
     space?.enter({ clientID: client.auth.clientId });
@@ -85,20 +84,20 @@ function App() {
     { field: "price" },
   ]);
 
-  const mutateMemberLocations = useCallback((prev,next,id) => {
+  const mutateMemberLocations = useCallback((previousLocation,nextLocation,clientId) => {
     updateRowData((draft) => { 
-      if (prev) {
-        const rowIdx = draft.findIndex((r) => r.id === prev);
-        const memberIdx = draft[rowIdx].rowMembers.indexOf(id);
+      if (previousLocation) {
+        const rowIdx = draft.findIndex((row) => row.id === previousLocation);
+        const memberIdx = draft[rowIdx].rowMembers.indexOf(clientId);
         if (memberIdx > -1) {
           draft[rowIdx].rowMembers.splice(memberIdx, 1);
         }
       }
-      if (next) {
-        const rowIdx = draft.findIndex((r) => r.id === next);
+      if (nextLocation) {
+        const rowIdx = draft.findIndex((row) => row.id === nextLocation);
         if (draft[rowIdx]) {
-          if (!draft[rowIdx].rowMembers.includes(id)) {
-            let l = draft[rowIdx].rowMembers.push(id);
+          if (!draft[rowIdx].rowMembers.includes(clientId)) {
+            draft[rowIdx].rowMembers.push(clientId);
           }
         }
       }
@@ -107,17 +106,19 @@ function App() {
   }, []);
 
   const onGridReady = (e) => {
-    api = e.api;
     console.log(`Ready`);
   };
 
-  const onRowSelected = async (e) => {
-    if (e.node.isSelected()) {
-      update({ nodeid: e.node.id });
-    }
-  };
+const onRowSelected = async (e) => {
+  if (e.node.isSelected()) {
+    update({ nodeid: e.node.id });
+  }
+};
 
-  const getRowId = (params) => params.data.id;
+
+const getRowId = useMemo(() => {
+  return (params) => params.data.id;
+})
 
   return (
     <>
@@ -125,7 +126,6 @@ function App() {
       <div className="ag-theme-alpine" style={{ height: 400, overflow: 'hidden'}}>
         <AgGridReact
           rowSelection="single"
-          ref={gridRef}
           rowData={rowData}
           rowHeight={50}
           columnDefs={columnDefs}
